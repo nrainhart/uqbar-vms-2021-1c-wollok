@@ -16,7 +16,7 @@ WollokQualifiedNameNode >> acceptVisitor: anAbstractNodeVisitor [
 { #category : #converting }
 WollokQualifiedNameNode >> asWollokQualifiedName [
 	
-	^ ((self identifiers collect: [ :e | e value ]) joinUsing: '.') asWollokQualifiedName 
+	^ ((self identifiers collect: [ :e | e value ]) joinUsing: '.') asString 
 ]
 
 { #category : #generated }

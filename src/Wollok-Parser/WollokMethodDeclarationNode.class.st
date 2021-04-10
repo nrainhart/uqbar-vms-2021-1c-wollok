@@ -72,6 +72,11 @@ WollokMethodDeclarationNode >> initialize [
 	commaTokens := OrderedCollection new: 2.
 ]
 
+{ #category : #'as yet unclassified' }
+WollokMethodDeclarationNode >> isNative [
+	^ false
+]
+
 { #category : #generated }
 WollokMethodDeclarationNode >> leftParenToken [
 	^ leftParenToken
