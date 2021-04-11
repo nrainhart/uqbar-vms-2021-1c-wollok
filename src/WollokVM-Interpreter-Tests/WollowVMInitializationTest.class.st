@@ -25,6 +25,10 @@ class	MyClass {
 	method getB(){
 		return b
 	}
+	
+	method getZ(){
+		return z
+	}
 
 	method setA(aValue){
 		a = aValue
@@ -40,6 +44,14 @@ WollowVMInitializationTest >> testInstanceVariableIsInitializedWithInitializeMet
 	anObject := self interpretExpression: 'new MyClass().getA()'.
 	
 	self assert: anObject literalValue equals: 3
+]
+
+{ #category : #tests }
+WollowVMInitializationTest >> testInterpretingUndeclaredVariableReadFails [
+
+	| anObject |
+		
+	self should: [ self interpretExpression: 'new MyClass().getZ()'] raise: Exception
 ]
 
 { #category : #tests }

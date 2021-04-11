@@ -2,10 +2,17 @@ Class {
 	#name : #WollokVMObject,
 	#superclass : #Object,
 	#instVars : [
-		'wollokClass'
+		'wollokClass',
+		'instanceVariables'
 	],
 	#category : #'WollokVM-Interpreter'
 }
+
+{ #category : #'as yet unclassified' }
+WollokVMObject >> assignVariable: aVariableName withValue: aVariableValue [
+	self flag: #todo.
+	instanceVariables at: aVariableName put: aVariableValue 
+]
 
 { #category : #UI }
 WollokVMObject >> gtInspectorVariablesIn: composite [
@@ -23,10 +30,15 @@ WollokVMObject >> gtInspectorVariablesIn: composite [
 ]
 
 { #category : #accessing }
+WollokVMObject >> initialize [
+
+	instanceVariables := Dictionary new
+]
+
+{ #category : #accessing }
 WollokVMObject >> instanceVariablesValues [
 
-	self flag: #todo.
-	^ #()
+	^ instanceVariables 
 ]
 
 { #category : #printing }
@@ -50,6 +62,11 @@ WollokVMObject >> valueCollection [
 			(self wollokClass allVariables
 				with: self instanceVariablesValues
 				collect: [ :n :v | n key variable name value -> v ])
+]
+
+{ #category : #'as yet unclassified' }
+WollokVMObject >> variableValue: aString [ 
+	^ self instanceVariablesValues at: aString ifAbsent: nil
 ]
 
 { #category : #accessing }

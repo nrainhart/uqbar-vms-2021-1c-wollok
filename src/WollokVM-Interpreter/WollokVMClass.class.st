@@ -10,7 +10,6 @@ Class {
 
 { #category : #accessing }
 WollokVMClass >> allVariables [
-
 	self flag: #todo.
 	^ #()
 ]

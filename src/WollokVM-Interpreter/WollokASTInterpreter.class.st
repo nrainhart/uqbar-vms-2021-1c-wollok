@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'bindings',
-		'returnedValue'
+		'returnedValue',
+		'executionStack'
 	],
 	#category : #'WollokVM-Interpreter'
 }
@@ -18,6 +19,7 @@ WollokASTInterpreter >> activateMethod: method withReceiver: receiver withArgume
 	].
 
 	"Manejar el caso de la ejecución normal con manejo de pila"
+	executionStack push: { 'receiver' -> receiver. 'arguments' -> arguments } asDictionary.
 	^ method acceptVisitor: self
 ]
 
@@ -59,6 +61,7 @@ WollokASTInterpreter >> interpretProgram: aFileNode [
 
 	| lastValue |
 
+	executionStack := Stack new.
 	aFileNode main elements do: [ :e | lastValue := e acceptVisitor: self ].
 
 	^ lastValue	
@@ -90,6 +93,21 @@ WollokASTInterpreter >> lookup: aString in: aWollokVMClass [
 WollokASTInterpreter >> resolve: aString [ 
 	
 	^ bindings at: aString
+]
+
+{ #category : #'as yet unclassified' }
+WollokASTInterpreter >> resolveVariable: aString [ 
+	| receiver |
+	receiver := executionStack top at: 'receiver'.
+	^ receiver variableValue: aString
+]
+
+{ #category : #'as yet unclassified' }
+WollokASTInterpreter >> visitAssignment: aWollokAssignmentNode [
+	| variableName variableValue |
+	variableName := aWollokAssignmentNode variable name value.
+	variableValue := aWollokAssignmentNode value acceptVisitor: self.
+	(executionStack top at: 'receiver') assignVariable: variableName withValue: variableValue
 ]
 
 { #category : #visiting }
@@ -125,10 +143,16 @@ WollokASTInterpreter >> visitBooleanLiteral: aWollokBooleanLiteralNode [
 ]
 
 { #category : #'as yet unclassified' }
-WollokASTInterpreter >> visitConstructorCall: aWollokConstructorCallNode [ 
-	^ WollokVMObject new 
-		wollokClass: (self resolve: (aWollokConstructorCallNode classRef asWollokQualifiedName));
-		yourself
+WollokASTInterpreter >> visitConstructorCall: aWollokConstructorCallNode [
+	| wollokClass newObject initializeMethod |
+	wollokClass := self resolve: (aWollokConstructorCallNode classRef asWollokQualifiedName).
+	newObject := WollokVMObject new
+		wollokClass: wollokClass;
+		yourself.
+	initializeMethod := self lookup: 'initialize' in: wollokClass.
+	self activateMethod: initializeMethod withReceiver: newObject withArguments: nil. 
+	^ newObject
+		
 ]
 
 { #category : #visiting }
@@ -160,7 +184,7 @@ WollokASTInterpreter >> visitReturnExpression: aWollokReturnExpressionNode [
 
 { #category : #'as yet unclassified' }
 WollokASTInterpreter >> visitVariable: aWollokVariableNode [ 
-	^ nil
+	^ self resolveVariable: aWollokVariableNode name value
 ]
 
 { #category : #literals }
