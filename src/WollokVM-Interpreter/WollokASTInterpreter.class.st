@@ -73,7 +73,7 @@ WollokASTInterpreter >> isFalse: aWollokObject [
 	^ aWollokObject isWollokFalse
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 WollokASTInterpreter >> isNull: anUndefinedObject [ 
 	^ anUndefinedObject isNil
 ]
@@ -84,7 +84,7 @@ WollokASTInterpreter >> isTrue: aWollokObject [
 	^ aWollokObject isWollokTrue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #bindings }
 WollokASTInterpreter >> lookup: aString in: aWollokVMClass [ 
 	^ aWollokVMClass methodNamed: aString
 ]
@@ -95,14 +95,14 @@ WollokASTInterpreter >> resolve: aString [
 	^ bindings at: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #bindings }
 WollokASTInterpreter >> resolveVariable: aString [ 
 	| receiver |
 	receiver := executionStack top at: 'receiver'.
 	^ receiver variableValue: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitAssignment: aWollokAssignmentNode [
 	| variableName variableValue |
 	variableName := aWollokAssignmentNode variable name value.
@@ -130,7 +130,7 @@ WollokASTInterpreter >> visitBinaryOperation: aBinaryOperation [
 	self notYetImplemented
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitBlockExpression: aWollokBlockExpressionNode [ 
 	aWollokBlockExpressionNode expressions do: [:expression | expression acceptVisitor: self].
 	^ returnedValue
@@ -142,7 +142,7 @@ WollokASTInterpreter >> visitBooleanLiteral: aWollokBooleanLiteralNode [
 	^ self asWollokBoolean: aWollokBooleanLiteralNode value value = 'true'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitConstructorCall: aWollokConstructorCallNode [
 	| wollokClass newObject initializeMethod |
 	wollokClass := self resolve: (aWollokConstructorCallNode classRef asWollokQualifiedName).
@@ -166,7 +166,7 @@ WollokASTInterpreter >> visitMemberFeatureCall: aWollokMemberFeatureCallNode [
 	^ self activateMethod: method withReceiver: receiver withArguments: arguments
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitMethodDeclaration: aWollokMethodDeclarationNode [ 
 	^ aWollokMethodDeclarationNode expression acceptVisitor: self
 ]
@@ -177,12 +177,12 @@ WollokASTInterpreter >> visitNumberLiteral: aWollokNumberLiteralNode [
 	^ self wollokNumberFrom: aWollokNumberLiteralNode numberValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitReturnExpression: aWollokReturnExpressionNode [ 
 	returnedValue := (aWollokReturnExpressionNode expression acceptVisitor: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitVariable: aWollokVariableNode [ 
 	^ self resolveVariable: aWollokVariableNode name value
 ]
