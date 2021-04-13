@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-WollowVMInterpreterControlFlowTest >> testIfUsedAsAnExpression [
+WollowVMInterpreterControlFlowTest >> testIfEvaluatesCondition [
 
 	| returnValue |
 	returnValue := self interpretExpression: 'if(3 > 2) 42 else 20'.
@@ -13,10 +13,18 @@ WollowVMInterpreterControlFlowTest >> testIfUsedAsAnExpression [
 ]
 
 { #category : #tests }
+WollowVMInterpreterControlFlowTest >> testIfUsedAsAnExpression [
+
+	| returnValue |
+	returnValue := self interpretExpression: 'if(true) 42 else 20'.
+	self assert: returnValue literalValue equals: 42
+]
+
+{ #category : #tests }
 WollowVMInterpreterControlFlowTest >> testIfUsedAsAnExpressionReturnsFalseValueIfFalse [
 
 	| returnValue |
-	returnValue := self interpretExpression: 'if(3 < 2) 42 else 20'.
+	returnValue := self interpretExpression: 'if(false) 42 else 20'.
 	self assert: returnValue literalValue equals: 20
 ]
 

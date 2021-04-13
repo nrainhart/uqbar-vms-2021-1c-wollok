@@ -127,6 +127,9 @@ WollokASTInterpreter >> visitBinaryOperation: aBinaryOperation [
 	aBinaryOperation operation value = '==='
 		ifTrue: [ ^ leftResult wollokIdenticalTo: rightResult ].
 	
+	aBinaryOperation operation value = '/'
+		ifTrue: [ ^ leftResult / rightResult ].
+	
 	self notYetImplemented
 ]
 
@@ -153,6 +156,16 @@ WollokASTInterpreter >> visitConstructorCall: aWollokConstructorCallNode [
 	self activateMethod: initializeMethod withReceiver: newObject withArguments: nil. 
 	^ newObject
 		
+]
+
+{ #category : #visiting }
+WollokASTInterpreter >> visitIfExpression: aWollokIfExpressionNode [ 
+	| condition |
+	condition := aWollokIfExpressionNode condition acceptVisitor: self.
+	condition isWollokTrue 
+		ifTrue: [ ^ aWollokIfExpressionNode then acceptVisitor: self ].
+	condition isWollokTrue 
+		ifFalse: [ ^ aWollokIfExpressionNode else acceptVisitor: self ].
 ]
 
 { #category : #visiting }
@@ -183,6 +196,26 @@ WollokASTInterpreter >> visitReturnExpression: aWollokReturnExpressionNode [
 ]
 
 { #category : #visiting }
+WollokASTInterpreter >> visitStringLiteral: aWollokStringLiteralNode [  
+
+	^ self wollokStringFrom: aWollokStringLiteralNode stringValue
+]
+
+{ #category : #visiting }
+WollokASTInterpreter >> visitUnaryOperation: aWollokUnaryOperationNode [
+	| operation rightOperand |
+
+	operation := aWollokUnaryOperationNode operation.	
+	rightOperand := aWollokUnaryOperationNode rightOperand acceptVisitor: self.
+	
+	self flag: #todo.
+	operation value = '-'
+		ifTrue: [ ^ rightOperand ].
+	
+	self notYetImplemented
+]
+
+{ #category : #visiting }
 WollokASTInterpreter >> visitVariable: aWollokVariableNode [ 
 	^ self resolveVariable: aWollokVariableNode name value
 ]
@@ -193,5 +226,13 @@ WollokASTInterpreter >> wollokNumberFrom: anInteger [
 	^ WollokVMLiteral new
 		wollokClass: (self resolve: 'wollok.lang.Number');
 		literalValue: anInteger;
+		yourself
+]
+
+{ #category : #literals }
+WollokASTInterpreter >> wollokStringFrom: aString [ 
+	^ WollokVMLiteral new
+		wollokClass: (self resolve: 'wollok.lang.String');
+		literalValue: aString;
 		yourself
 ]

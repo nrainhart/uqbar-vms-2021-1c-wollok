@@ -1,6 +1,6 @@
 Class {
 	#name : #WollokFalse,
-	#superclass : #Object,
+	#superclass : #WollokBoolean,
 	#instVars : [
 		'interpreter'
 	],

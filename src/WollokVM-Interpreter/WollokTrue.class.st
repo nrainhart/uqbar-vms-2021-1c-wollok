@@ -1,6 +1,6 @@
 Class {
 	#name : #WollokTrue,
-	#superclass : #Object,
+	#superclass : #WollokBoolean,
 	#category : #'WollokVM-Interpreter'
 }
 
