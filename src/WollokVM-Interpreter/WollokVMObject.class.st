@@ -32,7 +32,12 @@ WollokVMObject >> gtInspectorVariablesIn: composite [
 { #category : #accessing }
 WollokVMObject >> initialize [
 
-	instanceVariables := Dictionary new
+	instanceVariables := Dictionary new. 
+]
+
+{ #category : #'as yet unclassified' }
+WollokVMObject >> instanceVariables: instanceVariableValues [ 
+	^ instanceVariables := instanceVariableValues
 ]
 
 { #category : #accessing }

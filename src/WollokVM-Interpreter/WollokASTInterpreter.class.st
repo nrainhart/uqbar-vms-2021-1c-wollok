@@ -19,7 +19,7 @@ WollokASTInterpreter >> activateMethod: method withReceiver: receiver withArgume
 	].
 
 	"Manejar el caso de la ejecución normal con manejo de pila"
-	executionStack push: { 'receiver' -> receiver. 'arguments' -> arguments } asDictionary.
+	executionStack push: (WollokFunctionScope newWithReceiver: receiver andArguments: arguments). 
 	^ method acceptVisitor: self
 ]
 
@@ -62,6 +62,7 @@ WollokASTInterpreter >> interpretProgram: aFileNode [
 	| lastValue |
 
 	executionStack := Stack new.
+	executionStack push: WollokGlobalScope new.
 	aFileNode main elements do: [ :e | lastValue := e acceptVisitor: self ].
 
 	^ lastValue	
@@ -97,9 +98,8 @@ WollokASTInterpreter >> resolve: aString [
 
 { #category : #bindings }
 WollokASTInterpreter >> resolveVariable: aString [ 
-	| receiver |
-	receiver := executionStack top at: 'receiver'.
-	^ receiver variableValue: aString
+
+	^ executionStack top variableValue: aString. 
 ]
 
 { #category : #visiting }
@@ -107,7 +107,7 @@ WollokASTInterpreter >> visitAssignment: aWollokAssignmentNode [
 	| variableName variableValue |
 	variableName := aWollokAssignmentNode variable name value.
 	variableValue := aWollokAssignmentNode value acceptVisitor: self.
-	(executionStack top at: 'receiver') assignVariable: variableName withValue: variableValue
+	executionStack top assignVariable: variableName withValue: variableValue
 ]
 
 { #category : #visiting }
@@ -126,9 +126,9 @@ WollokASTInterpreter >> visitBinaryOperation: aBinaryOperation [
 		
 	aBinaryOperation operation value = '==='
 		ifTrue: [ ^ leftResult wollokIdenticalTo: rightResult ].
-	
-	aBinaryOperation operation value = '/'
-		ifTrue: [ ^ leftResult / rightResult ].
+		
+	aBinaryOperation operation value = '*'
+		ifTrue: [ ^ self wollokNumberFrom: leftResult literalValue * rightResult literalValue ].
 	
 	self notYetImplemented
 ]
@@ -152,8 +152,12 @@ WollokASTInterpreter >> visitConstructorCall: aWollokConstructorCallNode [
 	newObject := WollokVMObject new
 		wollokClass: wollokClass;
 		yourself.
+	executionStack push: (WollokFunctionScope newWithReceiver: newObject).
+	wollokClass allDeclarations do: [:declarationNode | declarationNode acceptVisitor: self].
+	executionStack pop.
 	initializeMethod := self lookup: 'initialize' in: wollokClass.
-	self activateMethod: initializeMethod withReceiver: newObject withArguments: nil. 
+	initializeMethod isNotNil 
+		ifTrue: [ self activateMethod: initializeMethod withReceiver: newObject withArguments: nil]. 
 	^ newObject
 		
 ]
@@ -218,6 +222,11 @@ WollokASTInterpreter >> visitUnaryOperation: aWollokUnaryOperationNode [
 { #category : #visiting }
 WollokASTInterpreter >> visitVariable: aWollokVariableNode [ 
 	^ self resolveVariable: aWollokVariableNode name value
+]
+
+{ #category : #'as yet unclassified' }
+WollokASTInterpreter >> visitVariableDeclaration: aWollokVariableDeclarationNode [
+	executionStack top declareVariable: aWollokVariableDeclarationNode variableName withValue: (aWollokVariableDeclarationNode right ifNotNil: [:rightExpression | rightExpression acceptVisitor: self]).
 ]
 
 { #category : #literals }

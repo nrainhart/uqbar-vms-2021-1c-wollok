@@ -85,6 +85,11 @@ WollokVariableDeclarationNode >> variable: aWollokVariableNode [
 		ifTrue: [ self variable parent: self ]
 ]
 
+{ #category : #'as yet unclassified' }
+WollokVariableDeclarationNode >> variableName [
+	^ self variable name value.
+]
+
 { #category : #generated }
 WollokVariableDeclarationNode >> writable [
 	^ writable

@@ -8,6 +8,12 @@ Class {
 	#category : #'WollokVM-Interpreter'
 }
 
+{ #category : #'as yet unclassified' }
+WollokVMClass >> allDeclarations [
+	self flag: #todo."Soportar variables declaradas en superclases"
+	^ self classNode variables.
+]
+
 { #category : #accessing }
 WollokVMClass >> allVariables [
 	self flag: #todo.
@@ -25,8 +31,13 @@ WollokVMClass >> ast: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+WollokVMClass >> classNode [
+	^ ast elements first.
+]
+
+{ #category : #'as yet unclassified' }
 WollokVMClass >> methodNamed: aString [ 
-	^ self ast elements first methods detect: [:method | method name value = aString]
+	^ self ast elements first methods detect: [:method | method name value = aString] ifNone: nil
 ]
 
 { #category : #accessing }
