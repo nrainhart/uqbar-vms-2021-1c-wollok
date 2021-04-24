@@ -90,7 +90,8 @@ WollokASTInterpreter >> isTrue: aWollokObject [
 
 { #category : #bindings }
 WollokASTInterpreter >> lookup: aString in: aWollokVMClass [ 
-	^ aWollokVMClass methodNamed: aString
+	(aWollokVMClass methodNamed: aString) ifNotNil: [ :method | ^ method ].
+	^ self lookup: aString in: (self resolve: aWollokVMClass superClassName).
 ]
 
 { #category : #bindings }

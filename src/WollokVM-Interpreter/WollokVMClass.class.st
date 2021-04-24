@@ -62,3 +62,8 @@ WollokVMClass >> printOn: aStream [
 		nextPut: $)
 		 
 ]
+
+{ #category : #'as yet unclassified' }
+WollokVMClass >> superClassName [
+	^ast elements first superclass asWollokQualifiedName 
+]
