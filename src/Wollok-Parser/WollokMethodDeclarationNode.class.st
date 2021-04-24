@@ -138,6 +138,11 @@ WollokMethodDeclarationNode >> override: aSmaCCToken [
 	override := aSmaCCToken
 ]
 
+{ #category : #'as yet unclassified' }
+WollokMethodDeclarationNode >> parameterNames [
+	^ self parameters collect: [ :each | each parameter value ]
+]
+
 { #category : #generated }
 WollokMethodDeclarationNode >> parameters [
 	^ parameters

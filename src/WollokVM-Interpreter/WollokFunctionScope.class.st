@@ -30,7 +30,7 @@ WollokFunctionScope >> arguments: someArguments [
 { #category : #'as yet unclassified' }
 WollokFunctionScope >> assignVariable: variableName withValue: variableValue [
 	self flag: #todo."definir si la variable corresponde a una variable local, o a un atributo, o a..."
-	self shouldBeImplemented.
+	receiver assignVariable: variableName withValue: variableValue
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,6 +44,7 @@ WollokFunctionScope >> receiver: aReceiver [
 ]
 
 { #category : #'as yet unclassified' }
-WollokFunctionScope >> variableValue: variableName [ 
+WollokFunctionScope >> variableValue: variableName [
+	arguments at: variableName ifPresent: [ :value | ^value ].
 	^ receiver variableValue: variableName.
 ]

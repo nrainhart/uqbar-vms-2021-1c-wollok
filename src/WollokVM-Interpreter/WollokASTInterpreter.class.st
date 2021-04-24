@@ -12,6 +12,7 @@ Class {
 { #category : #visiting }
 WollokASTInterpreter >> activateMethod: method withReceiver: receiver withArguments: arguments [
 
+	| returnValue |
 	method	 isNative ifTrue: [
 		"Manejar caso nativo"
 		...
@@ -20,7 +21,9 @@ WollokASTInterpreter >> activateMethod: method withReceiver: receiver withArgume
 
 	"Manejar el caso de la ejecución normal con manejo de pila"
 	executionStack push: (WollokFunctionScope newWithReceiver: receiver andArguments: arguments). 
-	^ method acceptVisitor: self
+	returnValue := method acceptVisitor: self.
+	executionStack pop.
+	^ returnValue
 ]
 
 { #category : #bindings }
@@ -64,7 +67,7 @@ WollokASTInterpreter >> interpretProgram: aFileNode [
 	executionStack := Stack new.
 	executionStack push: WollokGlobalScope new.
 	aFileNode main elements do: [ :e | lastValue := e acceptVisitor: self ].
-
+	executionStack pop.
 	^ lastValue	
 ]
 
@@ -177,9 +180,12 @@ WollokASTInterpreter >> visitMemberFeatureCall: aWollokMemberFeatureCallNode [
 	
 	| receiver arguments method |
 	receiver := aWollokMemberFeatureCallNode receiver acceptVisitor: self.
-	arguments := aWollokMemberFeatureCallNode arguments collect: [ :each |
-		each acceptVisitor: self ].
 	method := self lookup: aWollokMemberFeatureCallNode feature value in: receiver wollokClass.
+	arguments := (aWollokMemberFeatureCallNode arguments with: method parameterNames collect: [ :valueNode :name |
+		| value |
+		value := valueNode acceptVisitor: self.
+		name -> value 
+		 ]) asDictionary.
 	^ self activateMethod: method withReceiver: receiver withArguments: arguments
 ]
 
