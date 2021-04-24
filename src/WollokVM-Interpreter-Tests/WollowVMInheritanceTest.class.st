@@ -47,7 +47,7 @@ WollowVMInheritanceTest >> testInstanceVariableCanBeModified [
 	| anObject |
 	anObject := self interpretExpression: '
 	var a = new MyClass()
-	a.setB(77)
+	a.setA(77)
 	a.getA()'.
 	
 	self assert: anObject literalValue equals: 78
