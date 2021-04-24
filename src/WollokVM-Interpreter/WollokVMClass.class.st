@@ -65,5 +65,7 @@ WollokVMClass >> printOn: aStream [
 
 { #category : #'as yet unclassified' }
 WollokVMClass >> superClassName [
-	^ast elements first superclass asWollokQualifiedName 
+	ast elements first superclass ifNotNil: [ :superclass | ^ superclass asWollokQualifiedName ].
+	self name = 'wollok.lang.Object' ifTrue: [ ^ nil ].
+	^ 'wollok.lang.Object'
 ]
