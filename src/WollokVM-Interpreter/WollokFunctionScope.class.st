@@ -39,6 +39,11 @@ WollokFunctionScope >> declareVariable: variableName withValue: variableValue [
 ]
 
 { #category : #'as yet unclassified' }
+WollokFunctionScope >> receiver [
+	^ receiver
+]
+
+{ #category : #'as yet unclassified' }
 WollokFunctionScope >> receiver: aReceiver [ 
 	receiver := aReceiver.
 ]

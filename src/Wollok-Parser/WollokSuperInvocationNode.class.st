@@ -65,6 +65,12 @@ WollokSuperInvocationNode >> leftParenToken: aSmaCCToken [
 	leftParenToken := aSmaCCToken
 ]
 
+{ #category : #'as yet unclassified' }
+WollokSuperInvocationNode >> method [
+	self flag: #todo. "Asumes that every super call is two nodes inside of a method declaration - could break with a try/catch or other cases"
+	^parent parent
+]
+
 { #category : #generated }
 WollokSuperInvocationNode >> rightParenToken [
 	^ rightParenToken

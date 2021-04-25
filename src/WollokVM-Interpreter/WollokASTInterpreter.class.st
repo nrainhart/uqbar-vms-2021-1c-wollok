@@ -215,6 +215,24 @@ WollokASTInterpreter >> visitStringLiteral: aWollokStringLiteralNode [
 	^ self wollokStringFrom: aWollokStringLiteralNode stringValue
 ]
 
+{ #category : #'as yet unclassified' }
+WollokASTInterpreter >> visitSuperInvocation: aWollokSuperInvocationNode [ 
+	| selector currentObject currentMethod currentMethodSuperclass superMethod arguments |
+	currentMethod := aWollokSuperInvocationNode method.
+	currentMethodSuperclass := currentMethod parent superclass asWollokQualifiedName.
+	selector := currentMethod name value.
+	superMethod := self lookup: selector in: (self resolve: currentMethodSuperclass).
+	currentObject := executionStack top receiver.
+	
+	self flag: #todo. "This code resolving the arguments is the same that's on WollokASTInterpreter>>visitMemberFeatureCall:"
+	arguments := (aWollokSuperInvocationNode arguments with: superMethod parameterNames collect: [ :valueNode :name |
+		| value |
+		value := valueNode acceptVisitor: self.
+		name -> value 
+		 ]) asDictionary.
+	^self activateMethod: superMethod withReceiver: currentObject withArguments: arguments
+]
+
 { #category : #visiting }
 WollokASTInterpreter >> visitUnaryOperation: aWollokUnaryOperationNode [
 	| operation rightOperand |
