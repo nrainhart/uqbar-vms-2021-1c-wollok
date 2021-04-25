@@ -7,7 +7,7 @@ Evaluar en el Playground
 ```
 Metacello new
 	baseline: 'WollokVM';
-	repository: 'github://tesonep/wollok-base';
+	repository: 'github://nrainhart/uqbar-vms-2021-1c-wollok';
 	load.
 ```
 
