@@ -74,7 +74,7 @@ WollokMethodDeclarationNode >> initialize [
 
 { #category : #'as yet unclassified' }
 WollokMethodDeclarationNode >> isNative [
-	^ false
+	^ native isNotNil
 ]
 
 { #category : #generated }

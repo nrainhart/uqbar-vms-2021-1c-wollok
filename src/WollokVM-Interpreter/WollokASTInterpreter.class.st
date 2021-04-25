@@ -134,9 +134,24 @@ WollokASTInterpreter >> visitBinaryOperation: aBinaryOperation [
 	aBinaryOperation operation value = '*'
 		ifTrue: [ ^ self wollokNumberFrom: leftResult literalValue * rightResult literalValue ].
 		
+	aBinaryOperation operation value = '/'
+		ifTrue: [ ^ self wollokNumberFrom: leftResult literalValue / rightResult literalValue ].
+		
+	aBinaryOperation operation value = '%'
+		ifTrue: [ ^ self wollokNumberFrom: leftResult literalValue % rightResult literalValue ].
+		
 	aBinaryOperation operation value = '+'
 		ifTrue: [ ^ self wollokNumberFrom: leftResult literalValue + rightResult literalValue ].
-	
+		
+	aBinaryOperation operation value = '-'
+		ifTrue: [ ^ self wollokNumberFrom: leftResult literalValue - rightResult literalValue ].
+		
+	aBinaryOperation operation value = '>'
+		ifTrue: [ ^ self asWollokBoolean: leftResult literalValue > rightResult literalValue ].
+
+	aBinaryOperation operation value = '<'
+		ifTrue: [ ^ self asWollokBoolean: leftResult literalValue < rightResult literalValue ].
+		
 	self notYetImplemented
 ]
 
