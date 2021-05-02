@@ -88,6 +88,12 @@ WollokMethodDeclarationNode >> leftParenToken: aSmaCCToken [
 ]
 
 { #category : #accessing }
+WollokMethodDeclarationNode >> methodName [ 
+	
+	^ self name value
+]
+
+{ #category : #accessing }
 WollokMethodDeclarationNode >> methodNode [
 	
 	^ self

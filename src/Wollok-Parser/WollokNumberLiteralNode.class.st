@@ -13,6 +13,11 @@ WollokNumberLiteralNode >> acceptVisitor: anAbstractNodeVisitor [
 ]
 
 { #category : #accessing }
+WollokNumberLiteralNode >> literalValue [
+	^ self numberValue.
+]
+
+{ #category : #accessing }
 WollokNumberLiteralNode >> numberValue [
 	
 	^ value value asNumber

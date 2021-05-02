@@ -14,9 +14,7 @@ WollokASTInterpreter >> activateMethod: method withReceiver: receiver withArgume
 
 	| returnValue |
 	method	 isNative ifTrue: [
-		"Manejar caso nativo"
-		...
-		^ self
+		^ self executeNativeMethod: method methodName withReceiver: receiver andArguments: arguments 
 	].
 
 	"Manejar el caso de la ejecución normal con manejo de pila"
@@ -47,6 +45,18 @@ WollokASTInterpreter >> asWollokBoolean: aPharoBoolean [
 			boolean := WollokFalse new.
 			boolean interpreter: self.
 			boolean ]
+]
+
+{ #category : #'as yet unclassified' }
+WollokASTInterpreter >> executeNativeMethod: methodName withReceiver: aWollokVMLiteral andArguments: arguments [
+	self flag: #todo. "We should have a more principled approach for handling native methods and unary/binary operations"
+	methodName = 'size'
+		ifTrue: [ ^ self wollokNumberFrom: aWollokVMLiteral literalValue size ].
+	
+	methodName = 'contains'
+		ifTrue: [ ^ self asWollokBoolean: (aWollokVMLiteral literalValue includes: arguments values first literalValue) ].
+	
+	self shouldBeImplemented.
 ]
 
 { #category : #interpreting }
