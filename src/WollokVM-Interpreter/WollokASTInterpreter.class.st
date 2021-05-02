@@ -195,6 +195,11 @@ WollokASTInterpreter >> visitIfExpression: aWollokIfExpressionNode [
 ]
 
 { #category : #visiting }
+WollokASTInterpreter >> visitListLiteral: aWollokListLiteralNode [ 
+	^ self wollokListFrom: (aWollokListLiteralNode listValue)
+]
+
+{ #category : #visiting }
 WollokASTInterpreter >> visitMemberFeatureCall: aWollokMemberFeatureCallNode [ 
 	
 	| receiver arguments method |
@@ -270,6 +275,14 @@ WollokASTInterpreter >> visitVariable: aWollokVariableNode [
 { #category : #'as yet unclassified' }
 WollokASTInterpreter >> visitVariableDeclaration: aWollokVariableDeclarationNode [
 	executionStack top declareVariable: aWollokVariableDeclarationNode variableName withValue: (aWollokVariableDeclarationNode right ifNotNil: [:rightExpression | rightExpression acceptVisitor: self]).
+]
+
+{ #category : #literals }
+WollokASTInterpreter >> wollokListFrom: aCollection [ 
+	^ WollokVMLiteral new
+		wollokClass: (self resolve: 'wollok.lang.List');
+		literalValue: aCollection;
+		yourself
 ]
 
 { #category : #literals }

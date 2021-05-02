@@ -64,6 +64,11 @@ WollokListLiteralNode >> leftBracketToken: aSmaCCToken [
 	leftBracketToken := aSmaCCToken
 ]
 
+{ #category : #accessing }
+WollokListLiteralNode >> listValue [
+	^ self elements collect: [:each | each value value].
+]
+
 { #category : #generated }
 WollokListLiteralNode >> rightBracketToken [
 	^ rightBracketToken
