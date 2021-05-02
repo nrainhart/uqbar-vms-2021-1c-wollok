@@ -235,7 +235,7 @@ WollokASTInterpreter >> visitStringLiteral: aWollokStringLiteralNode [
 	^ self wollokStringFrom: aWollokStringLiteralNode stringValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitSuperInvocation: aWollokSuperInvocationNode [ 
 	| selector currentObject currentMethod currentMethodSuperclass superMethod arguments |
 	currentMethod := aWollokSuperInvocationNode method.
@@ -272,7 +272,7 @@ WollokASTInterpreter >> visitVariable: aWollokVariableNode [
 	^ self resolveVariable: aWollokVariableNode name value
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 WollokASTInterpreter >> visitVariableDeclaration: aWollokVariableDeclarationNode [
 	executionStack top declareVariable: aWollokVariableDeclarationNode variableName withValue: (aWollokVariableDeclarationNode right ifNotNil: [:rightExpression | rightExpression acceptVisitor: self]).
 ]
